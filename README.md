@@ -17,7 +17,7 @@ Dictionary Manipulation: Modify dictionaries to remove negative objects and retu
 Installation
 Clone the repository:
 ```bash
-git clone https://github.com/fearbwirjs/StableDiffusionHelper.git
+git clone https://github.com/fearnworks/StableDiffusionHelper.git
 ```
 
 Install dependencies in desired virtual environment and see the example_notebook for usage:
@@ -67,6 +67,6 @@ modified_dict, most_common_neg_line = remove_neg_objects({"key": "value --neg it
 ### Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-License
-This project is licensed under the MIT License.
+### License
+This program is distributed under the terms of the GNU Affero Public License v3.0
 
