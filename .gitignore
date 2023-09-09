@@ -1,0 +1,12 @@
+__pycache__
+*.ckpt
+*.safetensors
+*.pth
+/ESRGAN/*
+/SwinIR/*
+/repositories
+/venv
+/tmp
+/model.ckpt
+/models/**/*
+*.egg-info
