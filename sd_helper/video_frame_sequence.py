@@ -15,10 +15,10 @@ class VideoFrameSequence:
     def _order_attributes(self, attrs):
         """Order attributes based on insertion and priority."""
         return sorted(attrs, key=lambda x: (
-            x not in self.global_attrs,
             x not in self.priority_list,
-            list(self.global_attrs.keys()).index(x) if x in self.global_attrs else 0,
+            x not in self.global_attrs,
             self.priority_list.index(x) if x in self.priority_list else 0,
+            list(self.global_attrs.keys()).index(x) if x in self.global_attrs else 0,
             x
         ))
 
@@ -86,9 +86,15 @@ class VideoFrameSequence:
         ordered_attributes = self._order_attributes(self.frames[str_frame])
         self.frames[str_frame] = {k: self.frames[str_frame][k] for k in ordered_attributes}
 
-    def schedule_weights(self, start_frame, end_frame, attributes, start_weights, end_weights, include_in_future=True):
+    def schedule_weights(self, start_frame, end_frame, attributes, start_weights, end_weights, include_in_future=True, priority=False):
         attributes, start_weights, end_weights = self._initialize_attributes(attributes, start_weights, end_weights)
         self._handle_lora_attributes(attributes)
+
+        # Check if the attributes are of priority and update the priority list
+        if priority:
+            for attribute in attributes:
+                if attribute not in self.priority_list:
+                    self.priority_list.insert(0, attribute)
 
         if include_in_future:
             for attribute in attributes:
@@ -97,9 +103,15 @@ class VideoFrameSequence:
         for frame in range(int(start_frame), int(end_frame) + 1):
             self._update_frame_attributes(frame, attributes, start_weights, end_weights, start_frame, end_frame)
 
-    def to_json(self):
-        json_object = self.frames
 
+    def to_json(self, drop_interval=None, indent=4):
+        if drop_interval is None:
+            json_object = self.frames
+        else:
+            # Drop frames based on the given interval
+            json_object = {str(frame): attrs for frame, attrs in self.frames.items() 
+                        if int(frame) % drop_interval == 0}
+            
         def convert_frames_to_single_string_with_parentheses(json_object):
             for frame, attrs in json_object.items():
                 attributes_list = []
@@ -114,4 +126,4 @@ class VideoFrameSequence:
             return json_object
 
         json_object = convert_frames_to_single_string_with_parentheses(json_object)
-        return json.dumps(json_object, indent=4)
+        return json.dumps(json_object, indent=indent)

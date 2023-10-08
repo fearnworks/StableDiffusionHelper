@@ -10,3 +10,5 @@ __pycache__
 /model.ckpt
 /models/**/*
 *.egg-info
+data/*
+output/*
